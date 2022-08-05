@@ -3,6 +3,7 @@ from datetime import datetime
 import time
 import csv
 
+
 def main():
     valido = False
     now = datetime.now()
@@ -12,12 +13,14 @@ def main():
 
     while not valido:
 
-        dato = int(input('Ingrese (número): 1 Para leer solo carpetas y luego renombrar o 2 Para leer archivos: '))
+        dato = int(input('Ingrese (número): 1 Para leer solo carpetas y luego renombrar o 2 Para leer y crear '
+                         'inventario de archivos: '))
         valido = validate_input(dato)
         if dato == 1:
             generado = read_folders_to_rename(path)
             generado += '.csv'
-            print(f'Se ha creado el archivo "{generado}" por favor ábrelo y modifica la columna "Rename" con el nuevo nombre y guárdalo.')
+            print(f'Se ha creado el archivo "{generado}" por favor ábrelo y modifica la columna "Rename" con el '
+                  f'nuevo nombre y guárdalo.')
 
             confirm = input('Presiona S cuando guardes el archivo y estés listo para renombrar los folders: ')
 
@@ -59,6 +62,7 @@ def read_folders_to_rename(path):
 
     return generated_file
 
+
 def files_inventory(path):
     files = []
     i = 1
@@ -79,9 +83,10 @@ def files_inventory(path):
 
     print(f'HEMOS ENCONTRADO: {len(files)} ARCHIVOS')
 
-    generated_file = input('Ingresa el nombre del Archivo:\n')
+    generated_file = input('Ingresa el nombre del Archivo: ')
     keys = ['Path', 'Base', 'Folder', 'Filemane']
     generate_csv(generated_file,keys,files)
+
 
 def generate_csv(generated_file, keys, files):
     with open(f'{generated_file}.csv', 'w', encoding="utf-8", newline='') as output_file:
@@ -89,10 +94,12 @@ def generate_csv(generated_file, keys, files):
         dict_writer.writerow(keys)
         dict_writer.writerows(files)
 
+
 def validate_input(value):
     if value in [1, 2]:
         return True
     return False
+
 
 if __name__ == "__main__":
     main()
