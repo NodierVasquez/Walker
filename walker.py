@@ -38,7 +38,6 @@ def main():
         else:
             print('En número ingresado es incorrecto. Vuelve a intentarlo.\n')
 
-
     fin_algoritmo = time.time()
     print(f'\n<<<<<<<<<<<<<<<< Tiempo total de algoritmo: {fin_algoritmo - inicio_algoritmo} >>>>>>>>>>>>>>>>\n')
 
