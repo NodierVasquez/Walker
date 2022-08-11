@@ -1,5 +1,10 @@
+# Generated files and folder when run pyinstall --clean --onefile walker.py 
 build/
 dist/
 *.spec
+
+# Generated File when run Script
 *.csv
+
+# Virtual Environment
 venv/
