@@ -13,8 +13,10 @@ def main():
 
     while not valido:
 
-        dato = int(input('Ingrese (número): 1 Para leer solo carpetas y luego renombrar o 2 Para leer y crear '
-                         'inventario de archivos: '))
+        dato = int(input('Ingrese (número): '
+                         '1 Para leer solo carpetas y luego renombrar o '
+                         '2 Para leer y crear inventario de archivos'
+                         '3 Para leer un CSV: '))
         valido = validate_input(dato)
         if dato == 1:
             generado = read_folders_to_rename(path)
@@ -35,20 +37,29 @@ def main():
 
         elif dato == 2:
             files_inventory(path)
+        if dato == 3:
+            filename = input('Ingresa el nombre del archivo que deseas leer:')
+            with open(filename+'.csv') as f:
+                reader = csv.DictReader(f)
+
+                for row in reader:
+                    os.rename(row['DsPetro'], row['Rename'])
+
         else:
             print('En número ingresado es incorrecto. Vuelve a intentarlo.\n')
 
     fin_algoritmo = time.time()
     print(f'\n<<<<<<<<<<<<<<<< Tiempo total de algoritmo: {fin_algoritmo - inicio_algoritmo} >>>>>>>>>>>>>>>>\n')
 
+
 def read_folders_to_rename(path):
     files = []
     i = 1
     # r=root, d=directories, f = files
     for r, d, f in os.walk(path):
-        for folder in d:
+        for dir in d:
             row = []
-            fullpath = os.path.join(r, folder)
+            fullpath = os.path.join(r, dir)
             row.append(fullpath)
             files.append(row)
             i += 1
@@ -84,7 +95,7 @@ def files_inventory(path):
 
     generated_file = input('Ingresa el nombre del Archivo: ')
     keys = ['Path', 'Base', 'Folder', 'Filemane']
-    generate_csv(generated_file,keys,files)
+    generate_csv(generated_file, keys, files)
 
 
 def generate_csv(generated_file, keys, files):
