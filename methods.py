@@ -22,21 +22,17 @@ def folders_inventory(path):
 
     return generated_file
 
-def folders_files_inventory(path):
+def folders_files_inventory(path: str):
+    '''
+    Find all files and folders inside inside given path.
+
+    :param path: Path to walk
+    :return: Lis of string that contain all inside path
+    '''
 
     items = glob(path+"/*")
-    # items = []
-    # for e in list_files:
-    #     # row = {column: e}
-    #     row = []
-    #     row.append(e)
-    #     items.append(row)
 
     print(f'HEMOS ENCONTRADO: {len(items)} ITEMS EN {path}')
-
-    # generated_file = 'folder_items_inv'
-    # keys = ['Path', 'Rename']
-    # generate_csv(generated_file, keys, items)
 
     return items
 
@@ -66,8 +62,17 @@ def files_inventory(path):
     generate_csv(generated_file, keys, files)
 
 
-def generate_csv(generated_file, keys, files, files2=[]):
-    if  not files2:
+def generate_csv(generated_file:str, keys:list, files:list, files2=[], files3=[]):
+    '''
+    Generate a CSV file with paths that was reading before.
+
+    :param generated_file: Custom name for CSV file that will be generated.
+    :param keys: List with names of columns.
+    :param files: List of paths.
+    :param files2: Optional parameter if you can read second path
+    :return: None
+    '''
+    if not files2:
         with open(f'{generated_file}.csv', 'w', encoding="utf-8", newline='') as output_file:
             dict_writer = csv.writer(output_file)
             dict_writer.writerow(keys)
@@ -76,9 +81,36 @@ def generate_csv(generated_file, keys, files, files2=[]):
         with open(f'{generated_file}.csv', 'w', encoding="utf-8", newline='') as output_file:
             dict_writer = csv.writer(output_file)
             dict_writer.writerow(keys)
-            for item in zip(files, files2):
+            for item in zip(files, files2, files3):
                 dict_writer.writerow(item)
 
+def compare_name_values(folderList1: list, folderList2: list):
+    '''
+    Extract split name of folders in *folderList1* and then comparing
+    those values in *folderList2* and use them to create a new list.
+
+    :param folderList1: List with the paths that we need to iterate
+    :param folderList2: List with the path that we need to compare using folderList1
+    :return: List with join values between .*folderList1* and *folderList2*
+    '''
+
+    values = []
+
+    for item in folderList1:
+        if os.path.isdir(item):
+            name1 = os.path.basename(item)
+            splitName1 = name1.split()
+
+            for item2 in folderList2:
+                if splitName1[1] in item2:
+                    name2 = os.path.basename(item2)
+                    splitName2 = name2.split()
+                    list = []
+                    list.append(splitName2[0])
+                    list.append(splitName1[0])
+                    values.append(list)
+
+    return values
 
 def validate_list(items):
     list = []

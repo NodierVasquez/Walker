@@ -1,4 +1,5 @@
 import os
+import sys
 from datetime import datetime
 import time
 import csv
@@ -49,8 +50,10 @@ def main():
 
         elif option in ['A', 'a']:
             files_inventory(path)
-        if option in ['X','x']:
-            num_path = int(input('Ingrese la cantidad de rutas que desea leer: '))
+
+        elif option in ['X','x']:
+            # num_path = int(input('Ingrese la cantidad de rutas que desea leer (máximo 2): '))
+            num_path = 2
 
             if num_path == 1:
                 path = input('Ingrese la ruta que desea MAPEAR: ')
@@ -75,22 +78,45 @@ def main():
 
             elif num_path == 2:
 
-                path1 = input('Ingrese la primera ruta que desea MAPEAR: ')
-                path2 = input('Ingrese la segunda ruta que desea MAPEAR: ')
+                # path1 = input('Ingrese la primera ruta que desea MAPEAR: ')
+                path1 = "C:\\Users\\H268497\\Downloads\\TESTING\\IP"
+                # path2 = input('Ingrese la segunda ruta que desea MAPEAR: ')
+                path2 = "C:\\Users\\H268497\\Downloads\\TESTING\\DSPetro"
 
-                items1 = folders_files_inventory(path1)
-                items2 = folders_files_inventory(path2)
+                folderList1 = folders_files_inventory(path1)
+                folderList2 = folders_files_inventory(path2)
 
-                keys = ['Path1', 'Path2']
+                folderList1.sort(key=len)
+                folderList2.sort(key=len)
 
-                # print(items)
+                joinedList = compare_name_values(folderList1, folderList2)
+
+                rename = folderList2.copy()
+
+                sub = dict(joinedList)
+
+                for key, val in sub.items():
+                    for idx, ele in enumerate(rename):
+                        if key in ele:
+                            rename[idx] = ele.replace(key, val)
+
+                keys = ['Path1', 'Path2', 'Rename']
                 generated_file = 'folder_items_inv'
-
-                generate_csv(generated_file, keys, items1, items2)
-
+                generate_csv(generated_file, keys, folderList1, folderList2,rename)
                 print(f'Se ha creado el archivo "{generated_file}.csv"')
 
-        if option in ['L','l']:
+                confirm = input('Revisa el archivo y presiona S cuando estés listo para renombrar: ')
+
+                if confirm in ['S', 's', 'SI', 'si', 'Si']:
+                    with open(generated_file+'.csv') as f:
+                        reader = csv.DictReader(f)
+
+                        for row in reader:
+                            os.rename(row['Path2'], row['Rename'])
+
+                print('\nHemos finalizado, por favor revisa. Gracias.')
+
+        elif option in ['L','l']:
             print('SIUUUUUU')
             # filename = input('Ingresa el nombre del archivo que deseas leer:')
             # with open(filename+'.csv') as f:
