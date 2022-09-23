@@ -1,9 +1,7 @@
-import os
-import sys
 from datetime import datetime
 import time
-import csv
 from methods import *
+from glob import glob
 
 
 def main():
@@ -47,13 +45,12 @@ def main():
 
             print('\nHemos finalizado, por favor revisa. Gracias.')
 
-
         elif option in ['A', 'a']:
             files_inventory(path)
 
         elif option in ['X','x']:
-            # num_path = int(input('Ingrese la cantidad de rutas que desea leer (máximo 2): '))
-            num_path = 2
+            num_path = int(input('Ingrese la cantidad de rutas que desea leer (máximo 2): '))
+            # num_path = 2
 
             if num_path == 1:
                 path = input('Ingrese la ruta que desea MAPEAR: ')
@@ -78,18 +75,27 @@ def main():
 
             elif num_path == 2:
 
-                # path1 = input('Ingrese la primera ruta que desea MAPEAR: ')
-                path1 = "C:\\Users\\H268497\\Downloads\\TESTING\\IP"
-                # path2 = input('Ingrese la segunda ruta que desea MAPEAR: ')
-                path2 = "C:\\Users\\H268497\\Downloads\\TESTING\\DSPetro"
+                path1 = input('Ingrese la primera ruta que desea MAPEAR: ')
+                # path1 = "C:\\Users\\H268497\\Downloads\\TESTING\\IP"
+                path2 = input('Ingrese la segunda ruta que desea MAPEAR: ')
+                # path2 = "C:\\Users\\H268497\\Downloads\\TESTING\\DSPetro"
 
                 folderList1 = folders_files_inventory(path1)
                 folderList2 = folders_files_inventory(path2)
 
-                folderList1.sort(key=len)
-                folderList2.sort(key=len)
+                # folderList1.sort(key=len)
+                # folderList2.sort(key=len)
+
+                # print("Lista 1",folderList1)
+                # print("\nLista 2",folderList2)
 
                 joinedList = compare_name_values(folderList1, folderList2)
+
+                print("\nLista de elementos",joinedList,"\n")
+                #
+                folderList2 = folders_files_inventory(path2, True)
+
+                # print("\n Nueva Lista 2", folderList2)
 
                 rename = folderList2.copy()
 
@@ -100,9 +106,9 @@ def main():
                         if key in ele:
                             rename[idx] = ele.replace(key, val)
 
-                keys = ['Path1', 'Path2', 'Rename']
-                generated_file = 'folder_items_inv'
-                generate_csv(generated_file, keys, folderList1, folderList2,rename)
+                keys = ['Path2', 'Rename']
+                generated_file = 'file_migration'
+                generate_csv(generated_file, keys, folderList2,rename)
                 print(f'Se ha creado el archivo "{generated_file}.csv"')
 
                 confirm = input('Revisa el archivo y presiona S cuando estés listo para renombrar: ')

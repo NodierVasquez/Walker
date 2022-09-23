@@ -22,17 +22,21 @@ def folders_inventory(path):
 
     return generated_file
 
-def folders_files_inventory(path: str):
+def folders_files_inventory(path: str, condition: bool = False):
+
     '''
     Find all files and folders inside inside given path.
 
     :param path: Path to walk
-    :return: Lis of string that contain all inside path
+    :param condition: When this variable is True, the script read all files on path
+    :return: List of string that contain all inside path
     '''
 
-    items = glob(path+"/*")
-
-    print(f'HEMOS ENCONTRADO: {len(items)} ITEMS EN {path}')
+    if condition:
+        items = glob(path + "/**")
+    else:
+        items = glob(path+"/Well*")
+        print(f'HEMOS ENCONTRADO: {len(items)} ITEMS EN {path}')
 
     return items
 
@@ -81,7 +85,7 @@ def generate_csv(generated_file:str, keys:list, files:list, files2=[], files3=[]
         with open(f'{generated_file}.csv', 'w', encoding="utf-8", newline='') as output_file:
             dict_writer = csv.writer(output_file)
             dict_writer.writerow(keys)
-            for item in zip(files, files2, files3):
+            for item in zip(files, files2):
                 dict_writer.writerow(item)
 
 def compare_name_values(folderList1: list, folderList2: list):
@@ -99,16 +103,17 @@ def compare_name_values(folderList1: list, folderList2: list):
     for item in folderList1:
         if os.path.isdir(item):
             name1 = os.path.basename(item)
-            splitName1 = name1.split()
+            if 'Well' in name1:
+                splitName1 = name1.split()
 
-            for item2 in folderList2:
-                if splitName1[1] in item2:
-                    name2 = os.path.basename(item2)
-                    splitName2 = name2.split()
-                    list = []
-                    list.append(splitName2[0])
-                    list.append(splitName1[0])
-                    values.append(list)
+                for item2 in folderList2:
+                    if splitName1[1] in item2:
+                        name2 = os.path.basename(item2)
+                        splitName2 = name2.split()
+                        list = []
+                        list.append(splitName2[0])
+                        list.append(splitName1[0])
+                        values.append(list)
 
     return values
 
