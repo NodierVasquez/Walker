@@ -91,7 +91,7 @@ def main():
 
                 joinedList = compare_name_values(folderList1, folderList2)
 
-                print("\nLista de elementos",joinedList,"\n")
+                print("\n****************** Lista de elementos [IP, DSPETRO] ******************\n\n",joinedList,"\n")
                 #
                 folderList2 = folders_files_inventory(path2, True)
 
@@ -101,26 +101,36 @@ def main():
 
                 sub = dict(joinedList)
 
+                # print(f'{sub}')
+
                 for key, val in sub.items():
-                    for idx, ele in enumerate(rename):
-                        if key in ele:
-                            rename[idx] = ele.replace(key, val)
+                    # print('=====================================')
+                    # print(f'{key} ----- {val}')
+                    for idx, ele in enumerate(folderList2):
+                        if val in ele:
+                            # print(f'******* {idx} **** {ele}')
+                            rename[idx] = ele.replace(val, key)
+                    # print('=====================================')
 
                 keys = ['Path2', 'Rename']
                 generated_file = 'file_migration'
-                generate_csv(generated_file, keys, folderList2,rename)
-                print(f'Se ha creado el archivo "{generated_file}.csv"')
+                try:
+                    generate_csv(generated_file, keys, folderList2,rename)
+                    print(f'Se ha creado el archivo "{generated_file}.csv"')
 
-                confirm = input('Revisa el archivo y presiona S cuando estés listo para renombrar: ')
+                    confirm = input('Revisa el archivo y presiona S cuando estés listo para renombrar: ')
 
-                if confirm in ['S', 's', 'SI', 'si', 'Si']:
-                    with open(generated_file+'.csv') as f:
-                        reader = csv.DictReader(f)
+                    if confirm in ['S', 's', 'SI', 'si', 'Si']:
+                        with open(generated_file+'.csv') as f:
+                            reader = csv.DictReader(f)
 
-                        for row in reader:
-                            os.rename(row['Path2'], row['Rename'])
+                            for row in reader:
+                                os.rename(row['Path2'], row['Rename'])
 
-                print('\nHemos finalizado, por favor revisa. Gracias.')
+                    print('\nHemos finalizado, por favor revisa. Gracias.')
+                except:
+                    print("NO SE PUDO GENERAR AL ARCHIVO, SEGURO TIENE UNO CON ABIERTO, CREADO CON ANTERIORIDAD EN LA MISMA CARPETA.")
+                    print("\nCIERRELO E INTENTE NUEVAMENTE.")
 
         elif option in ['L','l']:
             print('SIUUUUUU')

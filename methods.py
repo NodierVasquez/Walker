@@ -36,7 +36,15 @@ def folders_files_inventory(path: str, condition: bool = False):
         items = glob(path + "/**")
     else:
         items = glob(path+"/Well*")
-        print(f'HEMOS ENCONTRADO: {len(items)} ITEMS EN {path}')
+        print('=============================================')
+        copy = []
+        for i in items:
+            if not 'Copy of' in i:
+                copy.append(i)
+        items = copy[:]
+        print(f'HEMOS ENCONTRADO: {len(items)} ITEMS EN {path}\n')
+        print(items)
+        print('=============================================')
 
     return items
 
@@ -100,9 +108,13 @@ def compare_name_values(folderList1: list, folderList2: list):
 
     values = []
 
+    print("\n************ INFORMACIÓN ENCONTRADA **************\nEstructura:")
+    print(f'\tIP\n\t\tDSPETRO')
+    print("*********************************************")
     for item in folderList1:
         if os.path.isdir(item):
             name1 = os.path.basename(item)
+            print(f'\t{name1}')
             if 'Well' in name1:
                 splitName1 = name1.split()
 
@@ -110,10 +122,13 @@ def compare_name_values(folderList1: list, folderList2: list):
                     if splitName1[1] in item2:
                         name2 = os.path.basename(item2)
                         splitName2 = name2.split()
-                        list = []
-                        list.append(splitName2[0])
-                        list.append(splitName1[0])
-                        values.append(list)
+
+                        if splitName1[1] == splitName2[1]:
+                            print(f'\t\t{name2} ')
+                            list = []
+                            list.append(splitName1[0])
+                            list.append(splitName2[0])
+                            values.append(list)
 
     return values
 
