@@ -19,7 +19,8 @@ def main():
               "\n\tC - Para crear inventario de carpetas "
               "\n\tA - Para crear inventario de archivos "
               "\n\tX - Para crear inventario de carpetas y archivos"
-              "\n\tL - Para leer un archivo CSV")
+              "\n\tL - Para leer un archivo CSV"
+              "\n\tR - Para realizar un renombre masivo")
 
         option = input('--> : ')
         valido = validate_input(option)
@@ -82,16 +83,11 @@ def main():
 
                 folderList1 = folders_files_inventory(path1)
                 folderList2 = folders_files_inventory(path2)
-
-                # folderList1.sort(key=len)
-                # folderList2.sort(key=len)
-
-                # print("Lista 1",folderList1)
-                # print("\nLista 2",folderList2)
+                # folderList2 = rename_files(path2)
 
                 joinedList = compare_name_values(folderList1, folderList2)
 
-                print("\n****************** Lista de elementos [IP, DSPETRO] ******************\n\n",joinedList,"\n")
+                print("\n****************** Lista de elementos [DSPETRO, IP] ******************\n\n",joinedList,"\n")
                 #
                 folderList2 = folders_files_inventory(path2, True)
 
@@ -107,9 +103,9 @@ def main():
                     # print('=====================================')
                     # print(f'{key} ----- {val}')
                     for idx, ele in enumerate(folderList2):
-                        if val in ele:
+                        if key in ele:
                             # print(f'******* {idx} **** {ele}')
-                            rename[idx] = ele.replace(val, key)
+                            rename[idx] = ele.replace(key, val)
                     # print('=====================================')
 
                 keys = ['Path2', 'Rename']
@@ -120,17 +116,19 @@ def main():
 
                     confirm = input('Revisa el archivo y presiona S cuando estés listo para renombrar: ')
 
-                    if confirm in ['S', 's', 'SI', 'si', 'Si']:
-                        with open(generated_file+'.csv') as f:
-                            reader = csv.DictReader(f)
 
-                            for row in reader:
-                                os.rename(row['Path2'], row['Rename'])
-
-                    print('\nHemos finalizado, por favor revisa. Gracias.')
                 except:
                     print("NO SE PUDO GENERAR AL ARCHIVO, SEGURO TIENE UNO CON ABIERTO, CREADO CON ANTERIORIDAD EN LA MISMA CARPETA.")
                     print("\nCIERRELO E INTENTE NUEVAMENTE.")
+
+                if confirm in ['S', 's', 'SI', 'si', 'Si']:
+                    with open(generated_file + '.csv') as f:
+                        reader = csv.DictReader(f)
+
+                        for row in reader:
+                            os.rename(row['Path2'], row['Rename'])
+
+                print('\nHemos finalizado, por favor revisa. Gracias.')
 
         elif option in ['L','l']:
             print('SIUUUUUU')
@@ -140,6 +138,14 @@ def main():
             #
             #     for row in reader:
             #         os.rename(row['DsPetro'], row['Rename'])
+
+        elif option in ['R','r']:
+            path = input('Ingrese la ruta que desea MAPEAR: ')
+            option = int(input('Ingrese: '
+                           '\n\t1: si quiere renombrar de "Well" a "Well-"'
+                           '\n\t2: si quiere renombrar de "Well-" a "Well": '))
+
+            rename_files(path,option)
 
         else:
             print('La opción ingresada es incorrecta. Vuelve a intentarlo.\n')

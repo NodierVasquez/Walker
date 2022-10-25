@@ -22,13 +22,14 @@ def folders_inventory(path):
 
     return generated_file
 
-def folders_files_inventory(path: str, condition: bool = False):
+def folders_files_inventory(path: str, condition: bool = False, divider: str = None):
 
     '''
-    Find all files and folders inside inside given path.
+    Find all files and folders inside given path.
 
     :param path: Path to walk
     :param condition: When this variable is True, the script read all files on path
+    :param divider: String divider to avoid errors when rename
     :return: List of string that contain all inside path
     '''
 
@@ -39,7 +40,7 @@ def folders_files_inventory(path: str, condition: bool = False):
         print('=============================================')
         copy = []
         for i in items:
-            if not 'Copy of' in i:
+            if not 'Copy of' in i or not 'Copy' in i:
                 copy.append(i)
         items = copy[:]
         print(f'HEMOS ENCONTRADO: {len(items)} ITEMS EN {path}\n')
@@ -48,6 +49,29 @@ def folders_files_inventory(path: str, condition: bool = False):
 
     return items
 
+def rename_files(path, option: int = 0):
+    '''
+    Rename all files and folders inside given path, to avoid
+    Errors when rename using CSV file.
+
+    :param path: Path to walk
+    :param option: Number of format that the user want
+    :return: List of string that contain all inside path
+    '''
+
+
+    for item in glob(path + "/**"):
+        if "Well" in item or "IPDWell" in item:
+            if option == 1 and not "Well-" in item:
+                os.rename(item, item.replace("Well","Well-"))
+            elif option == 2:
+                os.rename(item, item.replace("Well-","Well"))
+            else:
+                print("\nNo se pueden renombrar los archivos.\n")
+
+    items = glob(path + "/**")
+
+    return items
 
 def files_inventory(path):
     files = []
@@ -113,21 +137,21 @@ def compare_name_values(folderList1: list, folderList2: list):
     print("*********************************************")
     for item in folderList1:
         if os.path.isdir(item):
-            name1 = os.path.basename(item)
-            print(f'\t{name1}')
-            if 'Well' in name1:
-                splitName1 = name1.split()
+            ipFilename = os.path.basename(item)
+            print(f'\t{ipFilename}')
+            if 'Well' in ipFilename:
+                splitIPFilename = ipFilename.split()
 
                 for item2 in folderList2:
-                    if splitName1[1] in item2:
-                        name2 = os.path.basename(item2)
-                        splitName2 = name2.split()
+                    if splitIPFilename[1] in item2:
+                        dsFilename = os.path.basename(item2)
+                        splitDSFilename = dsFilename.split()
 
-                        if splitName1[1] == splitName2[1]:
-                            print(f'\t\t{name2} ')
+                        if splitIPFilename[1] == splitDSFilename[1]:
+                            print(f'\t\t{dsFilename} ')
                             list = []
-                            list.append(splitName1[0])
-                            list.append(splitName2[0])
+                            list.append(splitDSFilename[0])
+                            list.append(splitIPFilename[0])
                             values.append(list)
 
     return values
