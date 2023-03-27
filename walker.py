@@ -4,6 +4,7 @@ import time
 import csv
 
 
+
 def main():
     valido = False
     now = datetime.now()
@@ -76,6 +77,10 @@ def files_inventory(path):
             row.append(os.path.dirname(fullpath))
             row.append(parent_folder)
             row.append(file)
+            row.append(os.path.getsize(fullpath))
+            # row.append(datetime.fromtimestamp(os.path.getatime(fullpath)).strftime("%d/%m/%Y, %H:%M:%S"))
+            row.append(datetime.fromtimestamp(os.path.getmtime(fullpath)).strftime("%d/%m/%Y, %H:%M:%S"))
+
 
             files.append(row)
             i += 1
@@ -83,7 +88,7 @@ def files_inventory(path):
     print(f'HEMOS ENCONTRADO: {len(files)} ARCHIVOS')
 
     generated_file = input('Ingresa el nombre del Archivo: ')
-    keys = ['Path', 'Base', 'Folder', 'Filemane']
+    keys = ['Path', 'Base', 'Folder', 'Filemane','Weight (bytes)', 'Last Modify']
     generate_csv(generated_file,keys,files)
 
 
