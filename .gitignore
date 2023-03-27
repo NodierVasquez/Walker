@@ -1,4 +1,4 @@
-# Generated files and folder when run pyinstall --clean --onefile walker.py 
+# Generated files and folder when run pyinstaller --clean --onefile walker.py
 build/
 dist/
 *.spec
