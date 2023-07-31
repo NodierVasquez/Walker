@@ -77,9 +77,17 @@ def files_inventory(path):
             row.append(os.path.dirname(fullpath))
             row.append(parent_folder)
             row.append(file)
-            row.append(os.path.getsize(fullpath))
+
+            try:
+                row.append(os.path.getsize(fullpath))
+            except:
+                row.append("-")
             # row.append(datetime.fromtimestamp(os.path.getatime(fullpath)).strftime("%d/%m/%Y, %H:%M:%S"))
-            row.append(datetime.fromtimestamp(os.path.getmtime(fullpath)).strftime("%d/%m/%Y, %H:%M:%S"))
+
+            try:
+                row.append(datetime.fromtimestamp(os.path.getmtime(fullpath)).strftime("%d/%m/%Y, %H:%M:%S"))
+            except:
+                row.append("-")
 
 
             files.append(row)
